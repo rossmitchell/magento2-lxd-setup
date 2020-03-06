@@ -93,3 +93,30 @@ ansible-playbook ./playbooks/playbook-setup-environment.yaml
 
 And then go and grab a coffee, this takes a bit of time to complete. Assuming there are no errors in the rn through, 
 after 10 / 15 min you should have a fully functioning Magento 2 site up and running 
+
+### Rerunning playbooks
+
+The project has been split up to allow the different parts of it to be run in isolation, mainly to help with the 
+development of the different parts of it. As such it should be possible to run any playbook in the 
+[playbooks](./playbooks) (Top level playbooks), or [plays](./plays) (Individual components) on their own.
+
+However many of these require information about other containers that the playbook is not running on in order to 
+function. This is not a problem when running the top level playbooks, as they are set to run on all machines, however 
+the component playbooks are restricted to run on individual containers / groups.
+
+To get around this we are [fact caching](https://docs.ansible.com/ansible/latest/plugins/cache.html) capabilities of 
+Ansible, and this is configured in the [ansible.cfg](./ansible.cfg) file. However there are two things to be aware of
+
+ * First, the cache has a lifetime of 24 hours. If you haven't rerun a playbook in the last 24hours you will need to 
+ regenerate the cache
+ * Secondly, if you drop and recreate a container, then you will need to manually refresh the cache
+ 
+The easiest way to do this is to delete the invalid files in the `facts/` directory and then run the debugging playbook
+
+```bash
+ansible-playbook ./playbooks/playbook-debug.yaml
+```                                             
+
+This connects to each machine and echos "Hello World", and is the quickest way I have of regenerating the cache. It is
+also useful to make sure that everything is setup correctly and you can connect to each of the machines that is expected
+to be there
