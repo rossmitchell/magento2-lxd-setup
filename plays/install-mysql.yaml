@@ -1,0 +1,9 @@
+---
+- name: Install and configure MySQL
+  hosts: database
+  any_errors_fatal: true
+  vars_files:
+    - ../vars/mysql.yaml
+
+  roles:
+    - role: geerlingguy.mysql

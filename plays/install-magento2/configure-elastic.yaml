@@ -1,0 +1,23 @@
+---
+- name: Install and configure Magento 2 instances
+  hosts: web
+  any_errors_fatal: true
+  vars_files:
+    - ../../vars/magento2.yaml
+    - ../../vars/elastic.yaml
+  tasks:
+    - name: Set Elastic Configuration
+      shell: "php bin/magento config:set {{ item.path }} {{ item.value }}"
+      args:
+        chdir: "{{ magento2_base_dir }}"
+      become: true
+      become_user: "{{ magento2_fs_user }}"
+      with_items:
+        - { path: catalog/search/engine, value: elasticsearch6 }
+        - { path: catalog/search/elasticsearch6_server_hostname, value: "{{ magento2_elastic_server }}" }
+        - { path: catalog/search/elasticsearch6_server_port, value: "{{ magento2_elastic_port }}" }
+        - { path: catalog/search/elasticsearch6_index_prefix, value: magento2 }
+        - { path: catalog/search/elasticsearch6_enable_auth, value: 1 }
+        - { path: catalog/search/elasticsearch6_username, value: "{{ magento2_elastic_basic_auth_user }}" }
+        - { path: catalog/search/elasticsearch6_password, value:  "{{ magento2_elastic_basic_auth_password }}" }
+        - { path: catalog/search/elasticsearch6_server_timeout, value: 15 }

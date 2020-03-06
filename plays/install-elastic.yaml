@@ -1,0 +1,33 @@
+---
+- name: Install and configure ElasticSearch
+  hosts: elastic
+  any_errors_fatal: true
+  vars_files:
+    - ../vars/elastic.yaml
+  tasks:
+    - import_role:
+        name: elastic.elasticsearch
+    - import_role:
+        name: geerlingguy.nginx
+    - import_role:
+        name: geerlingguy.repo-epel
+      when: ansible_os_family == 'RedHat'
+    - name: Ensure Passlib is installed
+      package:
+        name: python3-passlib
+        state: present
+    - name: Create basic auth file
+      htpasswd:
+        path: "{{ magento2_elastic_basic_auth_file }}"
+        name: "{{ magento2_elastic_basic_auth_user }}"
+        password: "{{ magento2_elastic_basic_auth_password }}"
+        owner: root
+        group: nginx
+        mode: 0640
+        state: present
+    - name: Configure Nginx
+      template:
+        src: "{{ inventory_dir }}/../../templates/elastic-search/etc/nginx/conf.d/elastic-nginx.conf.j2"
+        dest: "/etc/nginx/conf.d/elastic.conf"
+    - name: Restart nginx - move into notify when all roles are brough in
+      service: name=nginx state=restarted

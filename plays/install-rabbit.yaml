@@ -1,0 +1,41 @@
+---
+- name: Install and configure RabbitMQ
+  hosts: rabbit
+  any_errors_fatal: true
+  vars_files:
+    - ../vars/rabbit.yaml
+  tasks:
+    - import_role:
+        name: geerlingguy.repo-epel
+      when: ansible_os_family == 'RedHat'
+    - name: Ensure Yum is up to date
+      yum:
+        update_cache: yes
+      when: ansible_os_family == 'RedHat'
+    - import_role:
+        name: geerlingguy.rabbitmq
+    - name: Enable Plugins
+      rabbitmq_plugin: names=rabbitmq_management,rabbitmq_tracing,rabbitmq_federation state=enabled
+      notify:
+        - restart rabbitmq
+    - name: Add Magento User
+      rabbitmq_user:
+        user: "{{ magento2_rabbit_user }}"
+        password: "{{ magento2_rabbit_password }}"
+        vhost: "{{ magento2_rabbit_vhost }}"
+        configure_priv: "{{ magento2_rabbit_configure_priv }}"
+        read_priv: "{{ magento2_rabbit_read_priv }}"
+        write_priv: "{{ magento2_rabbit_write_priv}}"
+        state: present
+    - name: Add Administrator
+      rabbitmq_user:
+        user: "{{ rabbit_administrator_user }}"
+        password: "{{ rabbit_administrator_password }}"
+        tags: administrator
+        vhost: /
+        configure_priv: .*
+        write_priv: .*
+        read_priv: .*
+        state: present
+    - name: Remove default guest user
+      rabbitmq_user: user=guest state=absent

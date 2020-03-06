@@ -1,0 +1,33 @@
+---
+- name: Install and configure Magento 2 instances
+  hosts: web
+  any_errors_fatal: true
+  vars_files:
+    - ../../vars/magento2.yaml
+  tasks:
+    - name: Setup access keys to the Magento 2 repo
+      composer:
+        command: config
+        arguments: "http-basic.repo.magento.com {{ composer_magento2_username }} {{ composer_magento2_password }}"
+        global_command: Yes
+      become: true
+      become_user: "{{ magento2_fs_user }}"
+    - name: Create web directory
+      file:
+        path: "{{ magento2_base_dir }}"
+        state: directory
+        owner: "{{ magento2_fs_user }}"
+        group: "{{ php_fpm_pool_group }}"
+    - name: Check if the composer file exists
+      stat:
+        path: "{{ magento2_base_dir }}/composer.json"
+      register: project_installed
+    - name: Create Base Magento 2 repositiory
+      composer:
+        command: create-project
+        arguments: --repository-url=https://repo.magento.com/ magento/project-community-edition .
+        working_dir: "{{ magento2_base_dir }}"
+        prefer_dist: yes
+      become: true
+      become_user: "{{ magento2_fs_user }}"
+      when: project_installed.stat.exists == False

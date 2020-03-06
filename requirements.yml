@@ -1,0 +1,12 @@
+- src: geerlingguy.repo-epel
+- src: elastic.elasticsearch
+  version: 7.5.2
+- src: geerlingguy.rabbitmq
+- src: geerlingguy.mysql
+- src: geerlingguy.varnish
+- src: geerlingguy.redis
+- src: geerlingguy.nginx
+- src: geerlingguy.repo-remi
+- src: geerlingguy.php-versions
+- src: geerlingguy.php
+- src: geerlingguy.composer

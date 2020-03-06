@@ -1,0 +1,8 @@
+redis_requirepass: "{{ magento2_redis_password }}"
+redis_bind_interface: '0.0.0.0'
+redis_port: 6379
+redis_databases: 3
+
+magento2_redis_backend_cache_database: 0
+magento2_redis_page_cache_database: 1
+magento2_redis_seesion_database: 2

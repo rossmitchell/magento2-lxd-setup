@@ -1,0 +1,16 @@
+---
+- name: Install and configure Redis
+  hosts: redis
+  any_errors_fatal: true
+  vars_files:
+    - ../vars/redis.yaml
+  tasks:
+    - import_role:
+        name: geerlingguy.repo-epel
+      when: ansible_os_family == 'RedHat'
+    - name: Ensure Yum is up to date
+      yum:
+        update_cache: yes
+      when: ansible_os_family == 'RedHat'
+    - import_role:
+        name: geerlingguy.redis

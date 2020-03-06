@@ -1,0 +1,14 @@
+---
+- name: Install and configure Magento 2 instances
+  hosts: web
+  any_errors_fatal: true
+  vars_files:
+    - ../../vars/magento2.yaml
+  tasks:
+    - name: Install Sample Data
+      shell: php bin/magento setup:perf:generate-fixtures {{ magento2_performance_fixtures }}
+      args:
+        chdir: "{{ magento2_base_dir }}"
+      become: true
+      become_user: "{{ magento2_fs_user }}"
+      when: magento2_performance_enable == True

@@ -1,0 +1,46 @@
+---
+- name: Install and configure Magento 2 instances
+  hosts: web
+  any_errors_fatal: true
+  vars_files:
+    - ../../vars/magento2.yaml
+    - ../../vars/mysql.yaml
+    - ../../vars/rabbit.yaml
+    - ../../vars/redis.yaml
+  tasks:
+    - name: Configure Redis Backend Cache
+      shell: php bin/magento setup:config:set \
+        --cache-backend=redis \
+        --cache-backend-redis-server={{ magento2_redis_server }} \
+        --cache-backend-redis-port={{ redis_port }} \
+        --cache-backend-redis-db={{ magento2_redis_backend_cache_database }}
+        --cache-backend-redis-password={{ magento2_redis_password }}
+      args:
+        chdir: "{{ magento2_base_dir }}"
+      become: true
+      become_user: "{{ magento2_fs_user }}"
+      when: mage2_installed.stat.exists == False
+    - name: Configure Redis Page Cache
+      shell: php bin/magento setup:config:set \
+        --page-cache=redis \
+        --page-cache-redis-server={{ magento2_redis_server }} \
+        --page-cache-redis-port={{ redis_port }} \
+        --page-cache-redis-db={{ magento2_redis_page_cache_database }} \
+        --page-cache-redis-password={{ magento2_redis_password }}
+      args:
+        chdir: "{{ magento2_base_dir }}"
+      become: true
+      become_user: "{{ magento2_fs_user }}"
+      when: mage2_installed.stat.exists == False
+    - name: Configure Redis Session Storage
+      shell: php bin/magento setup:config:set \
+        --session-save=redis \
+        --session-save-redis-host={{ magento2_redis_server }} \
+        --session-save-redis-port={{ redis_port }} \
+        --session-save-redis-password={{ magento2_redis_password }} \
+        --session-save-redis-db={{ magento2_redis_seesion_database }}
+      args:
+        chdir: "{{ magento2_base_dir }}"
+      become: true
+      become_user: "{{ magento2_fs_user }}"
+      when: mage2_installed.stat.exists == False

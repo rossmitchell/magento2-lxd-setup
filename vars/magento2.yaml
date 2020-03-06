@@ -1,0 +1,46 @@
+domain_name: magento2-demo.internal.ross-mitchell.internal
+
+magento2_fs_user: magento
+magento2_base_dir: "/var/www/{{domain_name}}"
+
+
+magento2_admin_frontname: "{{ host_magento2_admin_frontname|default('backend')}}"
+magento2_admin_user: "{{ host_magento2_admin_user|default('admin') }}"
+magento2_admin_email: "{{ host_magento2_admin_email|default('magento2@example.com') }}"
+magento2_admin_firstname: "{{ host_magneto2_admin_firstname|default('Admin')  }}"
+magento2_admin_lastname: "{{ host_magento2_admin_lastname|default('User') }}"
+magento2_language: "{{ host_magento2_language|default('en_GB') }}"
+magento2_currency: "{{ host_magento2_currency|default('GBP') }}"
+magento2_base_url: "http://{{ domain_name }}"
+
+php_version: "7.3"
+php_webserver_daemon: "nginx"
+
+php_enable_php_fpm: true
+php_fpm_listen: "/var/run/php7-fpm.sock"
+php_fpm_pool_user: "{{ magento2_fs_user }}"
+php_fpm_pool_group: "nginx"
+
+php_packages_extra:
+  - php-bcmath
+  - php-ctype
+  - php-curl
+  - php-dom
+  - php-gd
+  - php-hash
+  - php-iconv
+  - php-intl
+  - php-mysqlnd
+  - php-openssl
+  - php-pdo
+  - php-simplexml
+  - php-soap
+  - php-xsl
+  - php-zip
+  - php-sodium
+
+
+
+magento2_performance_enable: True
+magento2_performance_fixtures_profile: medium
+magento2_performance_fixtures: "setup/performance-toolkit/profiles/ce/{{ magento2_performance_fixtures_profile }}.xml"

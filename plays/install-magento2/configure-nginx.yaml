@@ -1,0 +1,13 @@
+---
+- name: Install and configure Magento 2 instances
+  hosts: web
+  any_errors_fatal: true
+  vars_files:
+    - ../../vars/magento2.yaml
+  tasks:
+    - name: Setup Nginx Config
+      template:
+        src: "{{ inventory_dir }}/../../templates/web/etc/nginx/conf.d/web-nginx.conf.j2"
+        dest: "/etc/nginx/conf.d/{{ domain_name }}.conf"
+    - name: Restart nginx - move into notify when all roles are brough in
+      service: name=nginx state=restarted

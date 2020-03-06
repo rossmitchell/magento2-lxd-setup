@@ -1,0 +1,11 @@
+---
+- name: Install and configure Magento 2 instances
+  hosts: web
+  any_errors_fatal: true
+- import_playbook: install-magento2/setup-server.yaml
+- import_playbook: install-magento2/import-roles.yaml
+- import_playbook: install-magento2/install-magento-files.yaml
+- import_playbook: install-magento2/install-magento-from-cli.yaml
+- import_playbook: install-magento2/configure-redis.yaml
+- import_playbook: install-magento2/configure-elastic.yaml
+- import_playbook: install-magento2/configure-nginx.yaml

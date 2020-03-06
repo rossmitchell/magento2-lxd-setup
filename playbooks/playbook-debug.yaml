@@ -1,0 +1,7 @@
+---
+- hosts: base_machines
+  tasks:
+    - name: Checkin that we can connect to each machine
+      debug:
+        msg: "Hello world"
+

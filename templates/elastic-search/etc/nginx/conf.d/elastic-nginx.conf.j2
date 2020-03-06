@@ -1,0 +1,33 @@
+server {
+  listen {{ magento2_elastic_port }};
+
+  location / {
+   limit_except HEAD {
+      auth_basic "Restricted";
+      auth_basic_user_file  {{ magento2_elastic_basic_auth_file }};
+   }
+   proxy_pass http://{{ es_api_host }}:{{ es_api_port }};
+   proxy_redirect off;
+   proxy_set_header Host $host;
+   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+
+  location /_aliases {
+   auth_basic "Restricted";
+   auth_basic_user_file  {{ magento2_elastic_basic_auth_file }};
+   proxy_pass http://{{ es_api_host }}:{{ es_api_port }};
+   proxy_redirect off;
+   proxy_set_header Host $host;
+   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+
+  location /elasticsearch {
+  auth_basic "Restricted - elasticsearch";
+  auth_basic_user_file {{ magento2_elastic_basic_auth_file }};
+
+  proxy_pass http://{{ es_api_host }}:{{ es_api_port }};
+  proxy_redirect off;
+  proxy_set_header Host $host;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+}

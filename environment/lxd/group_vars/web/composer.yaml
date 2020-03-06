@@ -1,0 +1,2 @@
+composer_magento2_username: "{{ vault_composer_magento_username }}"
+composer_magento2_password: "{{ vault_composer_magento_password }}"

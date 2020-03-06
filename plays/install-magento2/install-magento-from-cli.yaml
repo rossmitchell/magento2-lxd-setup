@@ -1,0 +1,41 @@
+---
+- name: Install and configure Magento 2 instances
+  hosts: web
+  any_errors_fatal: true
+  vars_files:
+    - ../../vars/magento2.yaml
+    - ../../vars/mysql.yaml
+    - ../../vars/rabbit.yaml
+  tasks:
+    - name: Check if magento 2 is already installed
+      stat:
+        path: "{{ magento2_base_dir }}/app/etc/env.php"
+      register: mage2_installed
+    - name: Install magento 2 from CLI
+      shell: php bin/magento setup:install \
+        --cleanup-database \
+        --backend-frontname={{ magento2_admin_frontname }} \
+        --session-save=redis \
+        --db-host={{ magento2_database_host }} \
+        --db-user={{ magento2_database_user }} \
+        --db-password={{ magento2_database_pass }} \
+        --db-name={{ magento2_database }} \
+        --use-rewrites=1 \
+        --admin-user={{ magento2_admin_user }} \
+        --admin-password={{ magento2_admin_password }} \
+        --admin-email={{ magento2_admin_email }} \
+        --admin-firstname={{ magento2_admin_firstname }} \
+        --admin-lastname={{ magento2_admin_lastname }} \
+        --language={{ magento2_language }} \
+        --currency={{ magento2_currency }} \
+        --base-url={{ magento2_base_url }} \
+        --amqp-host={{ magento2_rabbit_host }} \
+        --amqp-port={{ magento2_rabbit_port }} \
+        --amqp-user={{ magento2_rabbit_user }} \
+        --amqp-password={{ magento2_rabbit_password }} \
+        --amqp-virtualhost={{ magento2_rabbit_vhost }}
+      args:
+        chdir: "{{ magento2_base_dir }}"
+      become: true
+      become_user: "{{ magento2_fs_user }}"
+      when: mage2_installed.stat.exists == False

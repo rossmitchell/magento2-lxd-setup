@@ -1,0 +1,4 @@
+magento2_database_host: "{{ hostvars['magento2-demo-database']['ansible_default_ipv4']['address'] }}"
+magento2_rabbit_host: "{{ hostvars['magento2-demo-rabbit']['ansible_default_ipv4']['address'] }}"
+magento2_redis_server: "{{ hostvars['magento2-demo-redis']['ansible_default_ipv4']['address'] }}"
+magento2_elastic_server: "{{ hostvars['magento2-demo-elastic-search']['ansible_default_ipv4']['address'] }}"

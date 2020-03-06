@@ -1,0 +1,11 @@
+---
+- name: Setup Magento 2 demo environment
+  hosts: all
+  strategy: free
+
+- import_playbook: ../plays/install-mysql.yaml
+- import_playbook: ../plays/install-redis.yaml
+- import_playbook: ../plays/install-elastic.yaml
+- import_playbook: ../plays/install-rabbit.yaml
+- import_playbook: ../plays/install-magento2.yaml
+- import_playbook: ../plays/install-varnish.yaml

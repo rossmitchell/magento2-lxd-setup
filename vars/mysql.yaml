@@ -1,0 +1,17 @@
+mysql_root_password: "{{ lookup('password', '{{ inventory_dir }}/one-time-passwords/mysql-password length=32 chars=ascii_letters') }}"
+
+magento2_database: 'magento2'
+magento2_database_user: 'magento2'
+
+mysql_databases:
+  - name: "{{ magento2_database }}"
+
+mysql_users:
+  - name: "{{ magento2_database_user }}"
+    host: "{{ hostvars['magento2-demo-web']['ansible_default_ipv4']['address'] }}"
+    password: "{{ magento2_database_pass }}"
+    priv: "{{ magento2_database }}.*:ALL"
+    state: present
+
+mysql_port: "3306"
+#mysql_bind_address: "{{ hostvars['magento2-demo-database']['ansible_default_ipv4']['address'] }}" - setting this prevents the playbook from running

@@ -1,0 +1,11 @@
+upstream fastcgi_backend {
+  server  unix:{{ php_fpm_listen }};
+}
+
+server {
+
+  listen 80;
+  server_name {{ domain_name }};
+  set $MAGE_ROOT {{ magento2_base_dir }};
+  include {{ magento2_base_dir }}/nginx.conf.sample;
+}

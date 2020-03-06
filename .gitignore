@@ -1,0 +1,6 @@
+vault.password
+roles/*
+facts/*
+environment/lxd/one-time-passwords/*
+vault.yaml
+environment/lxd/hosts
