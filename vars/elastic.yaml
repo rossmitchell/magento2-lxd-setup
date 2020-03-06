@@ -6,4 +6,10 @@ es_api_host: localhost
 magento2_elastic_port: 9632
 magento2_elastic_basic_auth_file: /etc/nginx/passwd/.htpasswd_magento_elasticsearch
 magento2_elastic_basic_auth_user: magento2
-magento2_elastic_basic_auth_password: "{{ lookup('password', '{{ inventory_dir }}/one-time-passwords/elastic-basic-auth-password length=32 chars=ascii_letters,digits') }}"
+magento2_elastic_basic_auth_password: >-
+  "{{
+  lookup('password',
+  '{{ inventory_dir }}/one-time-passwords/elastic-basic-auth-password
+  length=32
+  chars=ascii_letters,digits')
+  }}"

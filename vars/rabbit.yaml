@@ -1,7 +1,13 @@
 rabbitmq_version: 3.7.24
 
 rabbit_administrator_user: 'admin'
-rabbit_administrator_password: "{{ lookup('password', '{{ inventory_dir }}/one-time-passwords/rabbit-admin-password length=32 chars=ascii_letters') }}"
+rabbit_administrator_password: >-
+  "{{
+  lookup('password',
+  '{{ inventory_dir }}/one-time-passwords/rabbit-admin-password
+  length=32
+  chars=ascii_letters')
+  }}"
 
 magento2_rabbit_port: 5672
 

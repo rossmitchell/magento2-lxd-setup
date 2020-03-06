@@ -1,4 +1,10 @@
-mysql_root_password: "{{ lookup('password', '{{ inventory_dir }}/one-time-passwords/mysql-password length=32 chars=ascii_letters') }}"
+mysql_root_password: >-
+  "{{
+  lookup('password',
+  '{{ inventory_dir }}/one-time-passwords/mysql-password
+  length=32
+  chars=ascii_letters')
+  }}"
 
 magento2_database: 'magento2'
 magento2_database_user: 'magento2'
